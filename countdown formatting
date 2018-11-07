@@ -1,0 +1,66 @@
+
+import UIKit
+
+class ViewController: UIViewController {
+
+    var time = Timer()
+    
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }  
+   
+    @IBOutlet weak var currentTime: UILabel!
+    @IBOutlet weak var currentDate: UILabel!
+    @IBOutlet weak var countDown: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //Timer for current time
+        time = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ViewController.DateandTime), userInfo: nil, repeats: true)
+        
+        //Timer for Countdown until the end of the month
+        time = Timer.scheduledTimer(timeInterval: -1.0, target: self, selector: #selector(ViewController.countDownTimer), userInfo: nil, repeats: true)
+        
+        // Do any additional setup after loading the view, typically from a nib.
+        
+    }
+//Current time label
+      @objc func DateandTime () {
+        
+        let time = DateFormatter()
+        let date = DateFormatter()
+        date.dateFormat = "E, MMM dd hh:mm:ss a"
+        time.dateFormat = "E, MMM dd hh:mm:ss a"
+        
+        currentTime.text = time.string(from: Date())
+        currentDate.text = date.string(from: Date())
+        
+        
+    }
+    
+    //counting down until the end of the month. I'd like this to be formatted as dd:hh:mm:ss but I'm having a hard time with where to put DateFormatter.
+   
+   @objc func countDownTimer () {
+        
+   
+    let date = Date()
+    let calendar = Calendar.current
+    
+    let monthInterval = calendar.dateInterval(of: .month, for: date)!
+    let monthEndDate = monthInterval.end
+    let countDownComponents = calendar.dateComponents([.day,.hour,.minute,.second], from: date, to: monthEndDate)
+    
+    let daysLeft = countDownComponents.day!
+    let hoursLeft = countDownComponents.hour!
+    let minutesLeft = countDownComponents.minute!
+    let secondsLeft = countDownComponents.second!
+    
+    let countDownString = "\(daysLeft):\(hoursLeft):\(minutesLeft):\(secondsLeft)"
+        
+        countDown.text = countDownString
+    
+     }
+}
+
